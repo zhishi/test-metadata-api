@@ -1,0 +1,10 @@
+/.idea
+/.vscode
+/bin
+/log
+/pkg/dep
+/src/github.com
+coverage.out
+/.tmp
+/protobuf
+*.tar.gz

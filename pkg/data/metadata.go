@@ -93,3 +93,23 @@ func (a *AppMetadata) Validate() error {
 
 	return nil
 }
+
+// Extract per field index key and update the data
+func (a *AppMetadata) UpdateIndex(addIndex func(string, string)) {
+	if a == nil {
+		return
+	}
+	// Ideally this should be done by parsing the yaml structure and automatically generate the field key
+	// TODO: using the reflect package to go through all the fields
+	addIndex("website", a.Website)
+	addIndex("title", a.Title)
+	addIndex("version", a.Version)
+	addIndex("company", a.Company)
+	addIndex("source", a.Source)
+	addIndex("license", a.License)
+	addIndex("description", a.Description)
+	for _, m := range a.Maintainers {
+		addIndex("maintainers.name", m.Name)
+		addIndex("maintainers.email", m.Email)
+	}
+}

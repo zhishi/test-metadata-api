@@ -35,6 +35,10 @@ clean:
 
 build: $(BINS)
 
+$(TARGET_DIR)/%: $(SOURCE_FILES)
+	@echo Building $@ ...
+	@$(GOBUILD) -o $@ $(ROOT_PKG)/cmd/$*
+
 test: vet
 	@$(GOTEST) $(TEST_PKGS) && $(GO) tool cover -func=$(COVERAGE_PROFILE)
 

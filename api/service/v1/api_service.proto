@@ -6,26 +6,14 @@ import "google/api/annotations.proto";
 
 option go_package = "appmeta/api/service/v1";
 
-// Request to add a new application metadata
-message AddMetadataRequest {
+// Request to upload an application metadata
+message UploadMetadataRequest {
     // Content of the metadata in yaml format.
     string metadata = 10;
 }
 
-// Response to add a new application metadata
-message AddMetadataResponse {
-}
-
-// Request to get a application metadata
-message GetMetadataRequest {
-    // Website URL of the application
-    string website = 10;
-}
-
-// Response to get a application metadata
-message GetMetadataResponse {
-    // Metadata of the application in yaml format.
-    string metadta = 10;
+// Response to upload an application metadata
+message UploadMetadataResponse {
 }
 
 // Request to search application metadata
@@ -38,28 +26,31 @@ message SearchMetadataRequest {
     uint32 page_size = 30;
 }
 
+// The record of search result
+message MetadataRecord {
+    // the website URL which is used as record key
+    string website = 10;
+    // the metadata content
+    string metadata = 20;
+    // the last update time
+    string update_time = 30;
+}
+
 // Response to search application metadata
 message SearchMetadataResponse {
     // for paging
     string next_page_start = 10;
     // List of the search result
-    repeated string results = 20;
+    repeated MetadataRecord results = 20;
 }
 
 // Application metadata API service definition.
 service ApiService {
-    // Add a new application metadata
-    rpc AddMetadata (AddMetadataRequest) returns (AddMetadataResponse) {
+    // Upload an application metadata
+    rpc UploadMetadata (UploadMetadataRequest) returns (UploadMetadataResponse) {
         option (google.api.http) = {
             post: "/v1/app/metadata"
             body: "*"
-        };
-    }
-
-    // Get application metadata
-    rpc GetMetadata (GetMetadataRequest) returns (GetMetadataResponse) {
-        option (google.api.http) = {
-            get: "/v1/app/metadata"
         };
     }
 
@@ -69,4 +60,6 @@ service ApiService {
             get: "/v1/app/metadata/search"
         };
     }
+
+    // TBD: GetMetadata(), DeleteMetadata() based on website key
 }

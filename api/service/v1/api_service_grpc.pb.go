@@ -22,10 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiServiceClient interface {
-	// Add a new application metadata
-	AddMetadata(ctx context.Context, in *AddMetadataRequest, opts ...grpc.CallOption) (*AddMetadataResponse, error)
-	// Get application metadata
-	GetMetadata(ctx context.Context, in *GetMetadataRequest, opts ...grpc.CallOption) (*GetMetadataResponse, error)
+	// Upload an application metadata
+	UploadMetadata(ctx context.Context, in *UploadMetadataRequest, opts ...grpc.CallOption) (*UploadMetadataResponse, error)
 	// Search application metadata
 	SearchMetadata(ctx context.Context, in *SearchMetadataRequest, opts ...grpc.CallOption) (*SearchMetadataResponse, error)
 }
@@ -38,18 +36,9 @@ func NewApiServiceClient(cc grpc.ClientConnInterface) ApiServiceClient {
 	return &apiServiceClient{cc}
 }
 
-func (c *apiServiceClient) AddMetadata(ctx context.Context, in *AddMetadataRequest, opts ...grpc.CallOption) (*AddMetadataResponse, error) {
-	out := new(AddMetadataResponse)
-	err := c.cc.Invoke(ctx, "/appmeta.api.service.v1.ApiService/AddMetadata", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiServiceClient) GetMetadata(ctx context.Context, in *GetMetadataRequest, opts ...grpc.CallOption) (*GetMetadataResponse, error) {
-	out := new(GetMetadataResponse)
-	err := c.cc.Invoke(ctx, "/appmeta.api.service.v1.ApiService/GetMetadata", in, out, opts...)
+func (c *apiServiceClient) UploadMetadata(ctx context.Context, in *UploadMetadataRequest, opts ...grpc.CallOption) (*UploadMetadataResponse, error) {
+	out := new(UploadMetadataResponse)
+	err := c.cc.Invoke(ctx, "/appmeta.api.service.v1.ApiService/UploadMetadata", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,10 +58,8 @@ func (c *apiServiceClient) SearchMetadata(ctx context.Context, in *SearchMetadat
 // All implementations must embed UnimplementedApiServiceServer
 // for forward compatibility
 type ApiServiceServer interface {
-	// Add a new application metadata
-	AddMetadata(context.Context, *AddMetadataRequest) (*AddMetadataResponse, error)
-	// Get application metadata
-	GetMetadata(context.Context, *GetMetadataRequest) (*GetMetadataResponse, error)
+	// Upload an application metadata
+	UploadMetadata(context.Context, *UploadMetadataRequest) (*UploadMetadataResponse, error)
 	// Search application metadata
 	SearchMetadata(context.Context, *SearchMetadataRequest) (*SearchMetadataResponse, error)
 	mustEmbedUnimplementedApiServiceServer()
@@ -82,11 +69,8 @@ type ApiServiceServer interface {
 type UnimplementedApiServiceServer struct {
 }
 
-func (UnimplementedApiServiceServer) AddMetadata(context.Context, *AddMetadataRequest) (*AddMetadataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddMetadata not implemented")
-}
-func (UnimplementedApiServiceServer) GetMetadata(context.Context, *GetMetadataRequest) (*GetMetadataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMetadata not implemented")
+func (UnimplementedApiServiceServer) UploadMetadata(context.Context, *UploadMetadataRequest) (*UploadMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadMetadata not implemented")
 }
 func (UnimplementedApiServiceServer) SearchMetadata(context.Context, *SearchMetadataRequest) (*SearchMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchMetadata not implemented")
@@ -104,38 +88,20 @@ func RegisterApiServiceServer(s grpc.ServiceRegistrar, srv ApiServiceServer) {
 	s.RegisterService(&ApiService_ServiceDesc, srv)
 }
 
-func _ApiService_AddMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddMetadataRequest)
+func _ApiService_UploadMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadMetadataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServiceServer).AddMetadata(ctx, in)
+		return srv.(ApiServiceServer).UploadMetadata(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/appmeta.api.service.v1.ApiService/AddMetadata",
+		FullMethod: "/appmeta.api.service.v1.ApiService/UploadMetadata",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServiceServer).AddMetadata(ctx, req.(*AddMetadataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ApiService_GetMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMetadataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServiceServer).GetMetadata(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/appmeta.api.service.v1.ApiService/GetMetadata",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServiceServer).GetMetadata(ctx, req.(*GetMetadataRequest))
+		return srv.(ApiServiceServer).UploadMetadata(ctx, req.(*UploadMetadataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -166,12 +132,8 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ApiServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddMetadata",
-			Handler:    _ApiService_AddMetadata_Handler,
-		},
-		{
-			MethodName: "GetMetadata",
-			Handler:    _ApiService_GetMetadata_Handler,
+			MethodName: "UploadMetadata",
+			Handler:    _ApiService_UploadMetadata_Handler,
 		},
 		{
 			MethodName: "SearchMetadata",
