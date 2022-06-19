@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package appmeta.api.service.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "appmeta/api/service/v1";
+
+// Request to add a new application metadata
+message AddMetadataRequest {
+    // Content of the metadata in yaml format.
+    string metadata = 10;
+}
+
+// Response to add a new application metadata
+message AddMetadataResponse {
+}
+
+// Request to get a application metadata
+message GetMetadataRequest {
+    // Website URL of the application
+    string website = 10;
+}
+
+// Response to get a application metadata
+message GetMetadataResponse {
+    // Metadata of the application in yaml format.
+    string metadta = 10;
+}
+
+// Request to search application metadata
+message SearchMetadataRequest {
+    // Content of the query string
+    string query = 10;
+    // for paging
+    string page_start = 20;
+    // for paging
+    uint32 page_size = 30;
+}
+
+// Response to search application metadata
+message SearchMetadataResponse {
+    // for paging
+    string next_page_start = 10;
+    // List of the search result
+    repeated string results = 20;
+}
+
+// Application metadata API service definition.
+service ApiService {
+    // Add a new application metadata
+    rpc AddMetadata (AddMetadataRequest) returns (AddMetadataResponse) {
+        option (google.api.http) = {
+            post: "/v1/app/metadata"
+            body: "*"
+        };
+    }
+
+    // Get application metadata
+    rpc GetMetadata (GetMetadataRequest) returns (GetMetadataResponse) {
+        option (google.api.http) = {
+            get: "/v1/app/metadata"
+        };
+    }
+
+    // Search application metadata
+    rpc SearchMetadata (SearchMetadataRequest) returns (SearchMetadataResponse) {
+        option (google.api.http) = {
+            get: "/v1/app/metadata/search"
+        };
+    }
+}
