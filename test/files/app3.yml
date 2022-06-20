@@ -1,0 +1,14 @@
+title: App 3
+version: 2.0.1
+maintainers:
+- name: first last
+  email: email@hotmail.com
+- name: first last2
+  email: email2@gmail.com
+company: Company Inc.
+website: https://website3.com
+source: https://github.com/company/repo
+license: Apache-2.0
+description: |
+  ### blob of markdown
+  More markdown

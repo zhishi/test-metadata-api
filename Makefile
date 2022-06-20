@@ -3,7 +3,6 @@ ROOT_PKG=appmeta
 ROOT_DIR = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 UNAME ?= $(shell uname | tr A-Z a-z)
-ARCH ?= $(shell uname -m)
 
 INSTALL_DIR = bin
 TARGET_DIR = bin/$(UNAME)

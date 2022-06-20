@@ -59,7 +59,7 @@ func (m *ma) Start(ctx context.Context) error {
 		}),
 	)
 	if err := svc.RegisterApiServiceHandlerServer(ctx, gwmux, m); err != nil {
-		panic("failed to start service")
+		m.logger.Fatal("Failed to start service", zap.Error(err))
 	}
 
 	mux.Handle("/", gwmux)
@@ -108,10 +108,16 @@ func (m *ma) UploadMetadata(
 			md,
 		)
 	}()
-
+	// Audit log
+	if err == nil {
+		m.logger.Info("UploadMetadata succeeded")
+	} else {
+		m.logger.Info("UploadMetadata failed", zap.Error(err))
+	}
 	return
 }
 
+// for sorting the search result
 type byWebsite []*svc.MetadataRecord
 
 func (w byWebsite) Len() int {
@@ -164,6 +170,11 @@ func (m *ma) SearchMetadata(
 		resp.Results = res[start:end]
 		return nil
 	}()
-
+	// Audit log
+	if err == nil {
+		m.logger.Info("SearchMetadata succeeded", zap.String("query", req.GetQuery()))
+	} else {
+		m.logger.Info("SearchMetadata failed", zap.String("query", req.GetQuery()), zap.Error(err))
+	}
 	return
 }

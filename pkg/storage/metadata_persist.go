@@ -63,7 +63,6 @@ type mp struct {
 	store map[string]*record
 }
 
-// Creates a persistence as configured
 func NewPersistence(
 	logger *zap.Logger,
 	scope tally.Scope,
